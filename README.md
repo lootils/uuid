@@ -23,41 +23,76 @@ I strongly suggest reading the code comments in uuid.php as it is well documente
 
     $valid = UUID::isValid($foo); // $valid will be a bool if it is valid or not.
 
+### The UUID Object
+
+The UUID object is one that can be created though its constructor but most often should happen via one of the version factirues in UUID::createV3, UUID::createV4, UUID::createV5.
+
+Once an object is created there are a number of methods you can use. They include:
+
+* listFields: This lists the available fields.
+* getField: This returns the value for a passed in field name.
+* getVersion: Returns the UUID version (3, 4, or 5) if it is known.
+* getNamespace: Returns the namespace used to generate the UUID if it is known.
+* getName: Returns the name used to generate the UUID if it is known.
+* getURN: Returns a URN for the UUID.
+
+If you print the uuid you will get it as a string. For example:
+
+    $uuid = UUID::createV4();
+    print $uuid; // This will display the UUID in the format 6ba7b810-9dad-11d1-80b4-00c04fd430c8.
+
+If you are not using one of the factories you can create the an object using the following arguments:
+
+    $uuid = new UUID($uuid, $version, $namespace, $name);
+
+The arguments are in the form:
+
+* $uuid: The UUID as can be supplied in 4 different formats.
+
+  * As a hex string in the format '{6ba7b810-9dad-11d1-80b4-00c04fd430c8}'.
+  * Via a URN with the format 'urn:uuid:6ba7b810-9dad-11d1-80b4-00c04fd430c8'.
+  * Though an array in the form array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01').
+  * With an array where the keys are the field names as seen on the listField method.
+
+* $version: The version if known. Could be UUID::V3, UUID::V4, UUID::V5.
+* $namespace: For v3 and v5, the namespace used if it is known..
+* $name: For v3 and v5, the name used if it is known.
+
 ### Creating a Random UUID
 
-    $uuid = UUID::v4(); // $uuid is now a random UUID.
+    $uuid = UUID::createV4(); // $uuid is now a random UUID.
 
 ### Creating a v5 UUID
 
-    $uuid = UUID::v5(UUID::URL, 'http://example.com/foo.html');
+    $uuid = UUID::createV5(UUID::URL, 'http://example.com/foo.html');
 
 ### Verifying a v5 UUID
 
 If you know the namespace and name for a v5 UUID you can recreate and verify it. UUIDs created with the same namespace and name will always be the same. For example:
 
-    $uuid1 = UUID::v5(UUID::URL, 'http://example.com/foo.html');
-    $uuid2 = UUID::v5(UUID::URL, 'http://example.com/foo.html');
+    $uuid1 = UUID::createV5(UUID::URL, 'http://example.com/foo.html');
+    $uuid2 = UUID::createV5(UUID::URL, 'http://example.com/foo.html');
 
 In this case `$uuid1` is equal to `$uuid2`.
 
 ### Creating a v3 UUID
 
-    $uuid = UUID::v3(UUID::URL, 'http://example.com/foo.html');
+    $uuid = UUID::createV3(UUID::URL, 'http://example.com/foo.html');
 
 ### Verifying a v3 UUID
 
 If you know the namespace and name for a v3 UUID you can recreate and verify it. UUIDs created with the same namespace and name will always be the same. For example:
 
-    $uuid1 = UUID::v3(UUID::URL, 'http://example.com/foo.html');
-    $uuid2 = UUID::v3(UUID::URL, 'http://example.com/foo.html');
+    $uuid1 = UUID::createV3(UUID::URL, 'http://example.com/foo.html');
+    $uuid2 = UUID::createV3(UUID::URL, 'http://example.com/foo.html');
 
-In this case `$uuid1` is equal to `$uuid2`.
+In this case the uuid hex string value for `$uuid1` is equal to `$uuid2`.
 
 ### Creating a Custom Namespace
 
 If you want to create a custom namespace (like the URL and DNS ones) for your application you can do so with v3 or v5 methods and a NIL namespace. For example:
 
-    $namespace = UUID::v5(UUID::NIL, 'my_app_name');
+    $namespace = UUID::createV5(UUID::NIL, 'my_app_name');
 
 
 ## License

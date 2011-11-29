@@ -48,6 +48,279 @@ class UUID {
   const NIL = '00000000-0000-0000-0000-000000000000';
 
   /**
+   * @var UUID Version 3.
+   */
+  const V3 = '3';
+
+  /**
+   * @var UUID Version 4.
+   */
+  const V4 = '4';
+
+  /**
+   * @var UUID Version 5.
+   */
+  const V5 = '5';
+
+  /**
+   * @var the first 32 bits of the UUID.
+   */
+  protected $time_low = NULL;
+
+  /**
+   * @var the next 16 bits of the UUID.
+   */
+  protected $time_mid = NULL;
+
+  /**
+   * @var the next 16 bits of the UUID.
+   */
+  protected $time_hi_version = NULL;
+
+  /**
+   * @var the next 8 bits of the UUID.
+   */
+  protected $clock_seq_hi_variant = NULL;
+
+  /**
+   * @var the next 8 bits of the UUID.
+   */
+  protected $clock_seq_low = NULL;
+
+  /**
+   * @var the last 48 bits of the UUID.
+   */
+  protected $node = NULL;
+
+  /**
+   * @var the version of the UUID.
+   */
+  protected $version = NULL;
+
+  /**
+   * @var the namespace used when the UUID was generated.
+   */
+  protected $namespace = NULL;
+
+  /**
+   * @var the name used when the UUID was generated.
+   */
+  protected $name = NULL;
+
+  /**
+   * Return a list of UUID fields. These can be used with the getField() method.
+   *
+   * @return array
+   *  A list of fields on the UUID. These can be used with the getField method.
+   */
+  public function listFields() {
+    return array(
+      'time_low',
+      'time_mid',
+      'time_hi_version',
+      'clock_seq_hi_variant',
+      'clock_seq_low',
+      'node',
+    );
+  }
+
+  /**
+   * Get the value of a UUID field.
+   *
+   * @param string $name
+   *  The name of a field to get the vurrent value. The values are returned in
+   *  hex format.
+   */
+  public function getField($name) {
+    if (!in_array($name, $this->listFields())) {
+      throw new Exception('A field value was requested for an invalid field name.');
+    }
+
+    return $this->$name;
+  }
+
+  /**
+   * Get the UUID version for this UUID.
+   *
+   * @return string
+   *  The UUID Version number.
+   */
+  public function getVersion() {
+    return $this->version;
+  }
+
+  /**
+   * Get the UUID namespace for this UUID.
+   *
+   * @return string
+   *  The UUID namespace if known.
+   */
+  public function getNamespace() {
+    return $this->namespace;
+  }
+
+  /**
+   * Get the UUID name for this UUID.
+   *
+   * @return string
+   *  The UUID name if known.
+   */
+  public function getName() {
+    return $this->name;
+  }
+
+  /**
+   * Set the version of the UUID.
+   *
+   * @param string $version
+   *   3, 4, or 5 which are the possible suppored versions.
+   */
+  protected function setVersion($version) {
+    if ($version == self::V3 || $version == self::V4 || $version == self::V5) {
+      $this->version = $version;
+    }
+    else {
+      throw new Exception('An invalid version was specified.');
+    }
+  }
+
+  /**
+   * Get the URN for a URI.
+   */
+  public function getURN() {
+    return 'urn:uuid:' . $this;
+  }
+
+  /**
+   * Construct a new UUID object.
+   *
+   * There are a number of ways this UUID object could be generated.
+   *  - By the hex UUID: '{12345678-1234-5678-1234-567812345678}'
+   *  - Via the fields passed in as an array. For a list of fields see the method
+   *    listFields().
+   *  - From a URN: 'urn:uuid:12345678-1234-5678-1234-567812345678'
+   *
+   * @param mixed $uuid
+   *  The UUID in a format that can be parsed.
+   * @param const $version
+   *  (optional but recommended) The UUID version. If none specified we simply don't know it.
+   * @param string $namespace
+   *  (optional) The namespace used when the UUID was generated. This is useful with v3 and v5 UUIDs.
+   * @param string $name
+   *  (optional) The name used when the UUID was generated. This is useful with v3 and v5 UUIDs.
+   */
+  public function __construct($uuid, $version = NULL, $namespace = NULL, $name = NULL) {
+    $this->parse($uuid);
+    if (!is_null($version)) {
+      $this->setVersion($version);
+    }
+    $this->namespace = $namespace;
+    $this->name = $name;
+  }
+
+  /**
+   * Parse the UUID from the available formats.
+   *
+   * @todo this should be written prettier. For realz.
+   */
+  protected function parse($uuid) {
+    // The UUID as a standard string was passed in.
+    if (is_string($uuid)) {
+      if (substr($uuid, 0, 1) === '{' && substr($uuid, -1, 1) === '}') {
+        $string = substr($uuid, 1, strlen($uuid) - 2);
+        $this->parseStringToParts($string);
+      }
+      // The case where a URL was supplied.
+      elseif (substr($uuid, 0, 9) === 'urn:uuid:') {
+        $string = substr($uuid, 9);
+        $this->parseStringToParts($string);
+      }
+      else {
+        throw new Exception('The UUID string supplied could not be parsed.');
+      }
+    }
+    elseif (is_array($uuid)) {
+
+      if (count($uuid) != 6) {
+        throw new Exception('The UUID array supplied could not be parsed.');
+      }
+
+      // For the case where a UUID is passed in via the format:
+      // array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01');
+      if (isset($uuid[0]) && !empty($uuid[0])) {
+        $this->time_low = $uuid[0];
+        $this->time_mid = $uuid[1];
+        $this->time_hi_version =$uuid[2];
+        $this->clock_seq_hi_variant = $uuid[3];
+        $this->clock_seq_low =$uuid[4];
+        $this->node = $uuid[5];
+      }
+      // For the case where the UUID is passed in via the format:
+      // array(
+      //  'time_low' => '35e872b4',
+      //  'time_mid' => '190a',
+      //  'time_hi_version' => '5faa',
+      //  'clock_seq_hi_variant' => 'a0',
+      //  'clock_seq_low' => 'f6',
+      //  'node' => '09da0d4f9c01',
+      // );
+      elseif (isset($uuid['time_low']) && !empty($uuid['time_low'])) {
+        $this->time_low = $uuid['time_low'];
+        $this->time_mid = $uuid['time_mid'];
+        $this->time_hi_version =$uuid['time_hi_version'];
+        $this->clock_seq_hi_variant = $uuid['clock_seq_hi_variant'];
+        $this->clock_seq_low =$uuid['clock_seq_low'];
+        $this->node = $uuid['node'];
+      }
+      else {
+        throw new Exception('The UUID array supplied could not be parsed.');
+      }
+    }
+    else {
+      throw new Exception('The UUID supplied could not be parsed.');
+    }
+  }
+
+  /**
+   * Parse a string in the form of 12345678-1234-5678-1234-567812345678.
+   */
+  protected function parseStringToParts($string) {
+    $parts = explode('-', $string);
+        
+    if (count($parts) != 5) {
+      throw new Exception('The UUID string supplied could not be parsed.');
+    }
+
+    foreach ($parts as $id => $part) {
+      switch ($id) {
+        case 0:
+          $this->time_low = $part;
+          break;
+        case 1:
+          $this->time_mid = $part;
+          break;
+        case 2:
+          $this->time_hi_version = $part;
+          break;
+        case 3:
+          $this->clock_seq_hi_variant = substr($part, 0, 2);
+          $this->clock_seq_low = substr($part, 2);
+          break;
+        case 4:
+          $this->node = $part;
+          break;
+      }
+    }
+  }
+
+  /**
+   * Display the UUID as a string in the format 6ba7b810-9dad-11d1-80b4-00c04fd430c8.
+   */
+  public function __toString() {
+    return $this->time_low . '-' . $this->time_mid . '-' . $this->time_hi_version . '-' . $this->clock_seq_hi_variant . $this->clock_seq_low . '-' . $this->node;
+  }
+
+  /**
    * Validate if a UUID has a valid format.
    *
    * @param string $uuid
@@ -73,7 +346,7 @@ class UUID {
    * @param string $name
    *  The name we are creating the UUID for.
    */
-  public static function v5($namespace, $name) {
+  public static function createV5($namespace, $name) {
 
     // If the namespace is not a valid UUID we throw an error.
     if (!self::isValid($namespace)) {
@@ -84,7 +357,7 @@ class UUID {
 
     $hash = sha1($bin . $name);
 
-    return sprintf('%08s-%04s-%04x-%04x-%12s',
+    return new self (sprintf('{%08s-%04s-%04x-%04x-%12s}',
       // 32 bits for "time_low"
       substr($hash, 0, 8),
 
@@ -102,7 +375,7 @@ class UUID {
 
       // 48 bits for "node"
       substr($hash, 20, 12)
-    );
+    ), self::V5, $namespace, $name);
   }
 
   /**
@@ -113,8 +386,8 @@ class UUID {
    * @return string
    *  A properly formatted v4 UUID.
   */
-  public static function v4() {
-    return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+  public static function createV4() {
+    return new self (sprintf('{%04x%04x-%04x-%04x-%04x-%04x%04x%04x}',
       // 32 bits for "time_low"
       mt_rand(0, 65535), mt_rand(0, 65535),
 
@@ -131,7 +404,7 @@ class UUID {
 
       // 48 bits for "node"
       mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535)
-    );
+    ));
   }
 
   /**
@@ -142,7 +415,7 @@ class UUID {
    *
    * @see https://en.wikipedia.org/wiki/UUID#Version_3_.28MD5_hash.29
    */
-  public static function v3($namespace, $name) {
+  public static function createV3($namespace, $name) {
     // If the namespace is not a valid UUID we throw an error.
     if (!self::isValid($namespace)) {
       throw new Exception('The UUID provided for the namespace is not valid.');
@@ -152,7 +425,7 @@ class UUID {
 
     $hash = md5($bin . $name);
 
-    return sprintf('%08s-%04s-%04x-%04x-%12s',
+    return new self (sprintf('{%08s-%04s-%04x-%04x-%12s}',
 
       // 32 bits for "time_low"
       substr($hash, 0, 8),
@@ -171,7 +444,7 @@ class UUID {
 
       // 48 bits for "node"
       substr($hash, 20, 12)
-  );
+    ), self::V3, $namespace, $name);
 
   }
 
@@ -201,5 +474,4 @@ class UUID {
 
     return $bin;
   }
-
 }

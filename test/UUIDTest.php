@@ -37,14 +37,14 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    * The the v4 random method created a properly formatted UUID.
    */
    public function testV4() {
-     $this->assertTrue(UUID::isValid(UUID::v4()));
+     $this->assertTrue(UUID::isValid(UUID::createV4()));
    }
 
   /**
    * Thest that v4 is random.
    */
   public function testV4IsRandom() {
-    $this->assertNotEquals(UUID::v4(), UUID::v4());
+    $this->assertNotEquals(UUID::createV4(), UUID::createV4());
   }
 
   /**
@@ -77,7 +77,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], UUID::v3($data['namespace'], $name));
+      $this->assertEquals($data['expected'], UUID::createV3($data['namespace'], $name));
     }
   }
 
@@ -111,7 +111,75 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], UUID::v5($data['namespace'], $name));
+      $this->assertEquals($data['expected'], UUID::createV5($data['namespace'], $name));
+    }
+  }
+
+  /**
+   * Test parsing a UUID as a string when wrapped by {}.
+   */
+  public function testParseUUID() {
+    $uuid = new UUID('{886313e1-3b8a-5372-9b90-0c9aee199e5d}');
+    $this->assertEquals('886313e1-3b8a-5372-9b90-0c9aee199e5d', $uuid);
+  }
+
+  /**
+   * Test setting and getting information around a UUID.
+   */
+  public function testData() {
+    $uuid = new UUID('{35e872b4-190a-5faa-a0f6-09da0d4f9c01}', UUID::V5, UUID::DNS, 'mattfarina.com');
+
+    $this->assertEquals(UUID::V5, $uuid->getVersion());
+    $this->assertEquals(UUID::DNS, $uuid->getNamespace());
+    $this->assertEquals('mattfarina.com', $uuid->getName());
+  }
+
+  /**
+   * Test URL Support.
+   */
+  public function testURN() {
+    $uuid = new UUID('urn:uuid:35e872b4-190a-5faa-a0f6-09da0d4f9c01', UUID::V5, UUID::DNS, 'mattfarina.com');
+
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid);
+    $this->assertEquals('urn:uuid:35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getURN());
+  }
+
+  /**
+   * Test passing in arrays as a URI type.
+   */
+  public function testArrays() {
+    $uuid = new UUID(array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01'), UUID::V5, UUID::DNS, 'mattfarina.com');
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid);
+
+    $array = array(
+       'time_low' => '35e872b4',
+       'time_mid' => '190a',
+       'time_hi_version' => '5faa',
+       'clock_seq_hi_variant' => 'a0',
+       'clock_seq_low' => 'f6',
+       'node' => '09da0d4f9c01',
+    );
+    $uuid2 = new UUID($array, UUID::V5, UUID::DNS, 'mattfarina.com');
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid2);
+  }
+
+  /**
+   * Make sure fields are properly getting into their place.
+   */
+  public function testFields() {
+    $array = array(
+       'time_low' => '35e872b4',
+       'time_mid' => '190a',
+       'time_hi_version' => '5faa',
+       'clock_seq_hi_variant' => 'a0',
+       'clock_seq_low' => 'f6',
+       'node' => '09da0d4f9c01',
+    );
+    $uuid = new UUID($array, UUID::V5, UUID::DNS, 'mattfarina.com');
+
+    $fields = $uuid->listFields();
+    foreach ($fields as $field) {
+      $this->assertEquals($array[$field], $uuid->getField($field));
     }
   }
 }
