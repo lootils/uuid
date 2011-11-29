@@ -21,41 +21,35 @@ I strongly suggest reading the code comments in uuid.php as it is well documente
 
 ### Validating a UUID format
 
-    $util = new UUID();
-    $valid = $util->isValid($foo); // $valid will be a bool if it is valid or not.
+    $valid = UUID::isValid($foo); // $valid will be a bool if it is valid or not.
 
 ### Creating a Random UUID
 
-    $util = new UUID();
-    $uuid = $util->v4(); // $uuid is now a random UUID.
+    $uuid = UUID::v4(); // $uuid is now a random UUID.
 
 ### Creating a v5 UUID
 
-    $util = new UUID();
-    $uuid = $util->v5(UUID::URL, 'http://example.com/foo.html');
+    $uuid = UUID::v5(UUID::URL, 'http://example.com/foo.html');
 
 ### Verifying a v5 UUID
 
 If you know the namespace and name for a v5 UUID you can recreate and verify it. UUIDs created with the same namespace and name will always be the same. For example:
 
-    $util = new UUID();
-    $uuid1 = $util->v5(UUID::URL, 'http://example.com/foo.html');
-    $uuid2 = $util->v5(UUID::URL, 'http://example.com/foo.html');
+    $uuid1 = UUID::v5(UUID::URL, 'http://example.com/foo.html');
+    $uuid2 = UUID::v5(UUID::URL, 'http://example.com/foo.html');
 
 In this case `$uuid1` is equal to `$uuid2`.
 
 ### Creating a v3 UUID
 
-    $util = new UUID();
-    $uuid = $util->v3(UUID::URL, 'http://example.com/foo.html');
+    $uuid = UUID::v3(UUID::URL, 'http://example.com/foo.html');
 
 ### Verifying a v3 UUID
 
 If you know the namespace and name for a v3 UUID you can recreate and verify it. UUIDs created with the same namespace and name will always be the same. For example:
 
-    $util = new UUID();
-    $uuid1 = $util->v3(UUID::URL, 'http://example.com/foo.html');
-    $uuid2 = $util->v3(UUID::URL, 'http://example.com/foo.html');
+    $uuid1 = UUID::v3(UUID::URL, 'http://example.com/foo.html');
+    $uuid2 = UUID::v3(UUID::URL, 'http://example.com/foo.html');
 
 In this case `$uuid1` is equal to `$uuid2`.
 
@@ -63,8 +57,7 @@ In this case `$uuid1` is equal to `$uuid2`.
 
 If you want to create a custom namespace (like the URL and DNS ones) for your application you can do so with v3 or v5 methods and a NIL namespace. For example:
 
-    $util = new UUID();
-    $namespace = $util->v5(UUID::NIL, 'my_app_name');
+    $namespace = UUID::v5(UUID::NIL, 'my_app_name');
 
 
 ## License

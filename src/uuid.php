@@ -56,7 +56,7 @@ class UUID {
    * @param bool
    *  TRUE if the format is valid and FALSE otherwise.
    */
-  public function isValid($uuid) {
+  public static function isValid($uuid) {
     return (preg_match('/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i', $uuid) === 1);
   }
 
@@ -73,14 +73,14 @@ class UUID {
    * @param string $name
    *  The name we are creating the UUID for.
    */
-  public function v5($namespace, $name) {
+  public static function v5($namespace, $name) {
 
     // If the namespace is not a valid UUID we throw an error.
-    if (!$this->isValid($namespace)) {
+    if (!self::isValid($namespace)) {
       throw new Exception('The UUID provided for the namespace is not valid.');
     }
 
-    $bin = $this->bin($namespace);
+    $bin = self::bin($namespace);
 
     $hash = sha1($bin . $name);
 
@@ -113,7 +113,7 @@ class UUID {
    * @return string
    *  A properly formatted v4 UUID.
   */
-  public function v4() {
+  public static function v4() {
     return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
       // 32 bits for "time_low"
       mt_rand(0, 65535), mt_rand(0, 65535),
@@ -142,13 +142,13 @@ class UUID {
    *
    * @see https://en.wikipedia.org/wiki/UUID#Version_3_.28MD5_hash.29
    */
-  public function v3($namespace, $name) {
+  public static function v3($namespace, $name) {
     // If the namespace is not a valid UUID we throw an error.
-    if (!$this->isValid($namespace)) {
+    if (!self::isValid($namespace)) {
       throw new Exception('The UUID provided for the namespace is not valid.');
     }
 
-    $bin = $this->bin($namespace);
+    $bin = self::bin($namespace);
 
     $hash = md5($bin . $name);
 
@@ -184,8 +184,8 @@ class UUID {
    * @return string
    *  A UUID in binary format.
    */
-  protected function bin($uuid) {
-    if (!$this->isValid($uuid)) {
+  public static function bin($uuid) {
+    if (!self::isValid($uuid)) {
       throw new Exception('The UUID provided for the namespace is not valid.');
     }
 

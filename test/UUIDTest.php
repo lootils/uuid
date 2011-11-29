@@ -13,10 +13,6 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
   
   public $uuid = NULL;
 
-  public function setup() {
-    $this->uuid = new UUID();
-  }
-
   /**
    * Test the method UUID::isValid().
    */
@@ -33,7 +29,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $uuid => $expected) {
-      $this->assertEquals($expected, $this->uuid->isValid($uuid));
+      $this->assertEquals($expected, UUID::isValid($uuid));
     }
   }
 
@@ -41,14 +37,14 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    * The the v4 random method created a properly formatted UUID.
    */
    public function testV4() {
-     $this->assertTrue($this->uuid->isValid($this->uuid->v4()));
+     $this->assertTrue(UUID::isValid(UUID::v4()));
    }
 
   /**
    * Thest that v4 is random.
    */
   public function testV4IsRandom() {
-    $this->assertNotEquals($this->uuid->v4(), $this->uuid->v4());
+    $this->assertNotEquals(UUID::v4(), UUID::v4());
   }
 
   /**
@@ -81,7 +77,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], $this->uuid->v3($data['namespace'], $name));
+      $this->assertEquals($data['expected'], UUID::v3($data['namespace'], $name));
     }
   }
 
@@ -115,7 +111,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], $this->uuid->v5($data['namespace'], $name));
+      $this->assertEquals($data['expected'], UUID::v5($data['namespace'], $name));
     }
   }
 }
