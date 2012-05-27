@@ -7,7 +7,10 @@
  * Created by Matt Farina on 2011-11-29.
  */
 
-require_once 'src/uuid.php';
+// Include the composer autoloader.
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Lootils\UUID;
 
 class UUIDTest extends PHPUnit_Framework_TestCase {
   

@@ -7,6 +7,8 @@
  * Created by Matt Farina on 2011-11-29.
  */
 
+namespace Lootils;
+
 /**
  * This class creates RFC 4122 compliant Universally Unique Identifiers (UUID).
  *
