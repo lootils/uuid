@@ -21,7 +21,7 @@ I strongly suggest reading the code comments in uuid.php as it is well documente
 
 ### Validating a UUID format
 
-    $valid = UUID::isValid($foo); // $valid will be a bool if it is valid or not.
+    $valid = \Lootils\UUID::isValid($foo); // $valid will be a bool if it is valid or not.
 
 ### The UUID Object
 
@@ -38,12 +38,12 @@ Once an object is created there are a number of methods you can use. They includ
 
 If you print the uuid you will get it as a string. For example:
 
-    $uuid = UUID::createV4();
+    $uuid = \Lootils\UUID::createV4();
     print $uuid; // This will display the UUID in the format 6ba7b810-9dad-11d1-80b4-00c04fd430c8.
 
 If you are not using one of the factories you can create the an object using the following arguments:
 
-    $uuid = new UUID($uuid, $version, $namespace, $name);
+    $uuid = new \Lootils\UUID($uuid, $version, $namespace, $name);
 
 The arguments are in the form:
 
@@ -60,31 +60,31 @@ The arguments are in the form:
 
 ### Creating a Random UUID
 
-    $uuid = UUID::createV4(); // $uuid is now a random UUID.
+    $uuid = \Lootils\UUID::createV4(); // $uuid is now a random UUID.
 
 ### Creating a v5 UUID
 
-    $uuid = UUID::createV5(UUID::URL, 'http://example.com/foo.html');
+    $uuid = \Lootils\UUID::createV5(UUID::URL, 'http://example.com/foo.html');
 
 ### Verifying a v5 UUID
 
 If you know the namespace and name for a v5 UUID you can recreate and verify it. UUIDs created with the same namespace and name will always be the same. For example:
 
-    $uuid1 = UUID::createV5(UUID::URL, 'http://example.com/foo.html');
-    $uuid2 = UUID::createV5(UUID::URL, 'http://example.com/foo.html');
+    $uuid1 = \Lootils\UUID::createV5(UUID::URL, 'http://example.com/foo.html');
+    $uuid2 = \Lootils\UUID::createV5(UUID::URL, 'http://example.com/foo.html');
 
 In this case `$uuid1` is equal to `$uuid2`.
 
 ### Creating a v3 UUID
 
-    $uuid = UUID::createV3(UUID::URL, 'http://example.com/foo.html');
+    $uuid = \Lootils\UUID::createV3(UUID::URL, 'http://example.com/foo.html');
 
 ### Verifying a v3 UUID
 
 If you know the namespace and name for a v3 UUID you can recreate and verify it. UUIDs created with the same namespace and name will always be the same. For example:
 
-    $uuid1 = UUID::createV3(UUID::URL, 'http://example.com/foo.html');
-    $uuid2 = UUID::createV3(UUID::URL, 'http://example.com/foo.html');
+    $uuid1 = \Lootils\UUID::createV3(UUID::URL, 'http://example.com/foo.html');
+    $uuid2 = \Lootils\UUID::createV3(UUID::URL, 'http://example.com/foo.html');
 
 In this case the uuid hex string value for `$uuid1` is equal to `$uuid2`.
 
@@ -92,7 +92,7 @@ In this case the uuid hex string value for `$uuid1` is equal to `$uuid2`.
 
 If you want to create a custom namespace (like the URL and DNS ones) for your application you can do so with v3 or v5 methods and a NIL namespace. For example:
 
-    $namespace = UUID::createV5(UUID::NIL, 'my_app_name');
+    $namespace = \Lootils\UUID::createV5(UUID::NIL, 'my_app_name');
 
 
 ## License
