@@ -1,6 +1,6 @@
 # Universally Unique Identifiers (UUID)
 
-This PHP library creates and verifies RFC 4122 compliant version 3, 4, and 5 UUIDs.
+This PHP library, part of [Lootils](http://github.com/mattfarina/Lootils), creates and verifies RFC 4122 compliant version 3, 4, and 5 UUIDs.
 
 For more information on UUIDs see
 
