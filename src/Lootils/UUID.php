@@ -194,6 +194,16 @@ class UUID {
   }
 
   /**
+   * Get the UUID.
+   * 
+   * @return string
+   *   A string containing a properly formatted UUID.
+   */
+  function getUUID() {
+    return $this->time_low . '-' . $this->time_mid . '-' . $this->time_hi_version . '-' . $this->clock_seq_hi_variant . $this->clock_seq_low . '-' . $this->node;
+  }
+
+  /**
    * Construct a new UUID object.
    *
    * There are a number of ways this UUID object could be generated.
@@ -319,7 +329,7 @@ class UUID {
    * Display the UUID as a string in the format 6ba7b810-9dad-11d1-80b4-00c04fd430c8.
    */
   public function __toString() {
-    return $this->time_low . '-' . $this->time_mid . '-' . $this->time_hi_version . '-' . $this->clock_seq_hi_variant . $this->clock_seq_low . '-' . $this->node;
+    return $this->getUUID();
   }
 
   /**

@@ -80,7 +80,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], (string)UUID::createV3($data['namespace'], $name));
+      $this->assertEquals($data['expected'], UUID::createV3($data['namespace'], $name)->getUUID());
     }
   }
 
@@ -114,7 +114,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], (string)UUID::createV5($data['namespace'], $name));
+      $this->assertEquals($data['expected'], UUID::createV5($data['namespace'], $name)->getUUID());
     }
   }
 
@@ -123,7 +123,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    */
   public function testParseUUID() {
     $uuid = new UUID('{886313e1-3b8a-5372-9b90-0c9aee199e5d}');
-    $this->assertEquals('886313e1-3b8a-5372-9b90-0c9aee199e5d', (string)$uuid);
+    $this->assertEquals('886313e1-3b8a-5372-9b90-0c9aee199e5d', $uuid->getUUID());
   }
 
   /**
@@ -143,7 +143,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
   public function testURN() {
     $uuid = new UUID('urn:uuid:35e872b4-190a-5faa-a0f6-09da0d4f9c01', UUID::V5, UUID::DNS, 'mattfarina.com');
 
-    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', (string)$uuid);
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getUUID());
     $this->assertEquals('urn:uuid:35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getURN());
   }
 
@@ -152,7 +152,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    */
   public function testArrays() {
     $uuid = new UUID(array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01'), UUID::V5, UUID::DNS, 'mattfarina.com');
-    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', (string)$uuid);
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getUUID());
 
     $array = array(
        'time_low' => '35e872b4',
@@ -163,7 +163,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
        'node' => '09da0d4f9c01',
     );
     $uuid2 = new UUID($array, UUID::V5, UUID::DNS, 'mattfarina.com');
-    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', (string)$uuid2);
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid2->getUUID());
   }
 
   /**
@@ -184,5 +184,12 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     foreach ($fields as $field) {
       $this->assertEquals($array[$field], $uuid->getField($field));
     }
+  }
+
+  /**
+   * Test __toString converting an object to a valid UUID.
+   */
+  public function testToString() {
+    $this->assertEquals('20438dde-20d8-349c-937e-4544a202f35a', (string)UUID::createV3(UUID::DNS, 'mattfarina.com')->getUUID());
   }
 }
