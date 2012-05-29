@@ -10,14 +10,14 @@
 // Include the composer autoloader.
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Lootils\UUID;
+use Lootils\Uuid\Uuid;
 
 class UUIDTest extends PHPUnit_Framework_TestCase {
   
   public $uuid = NULL;
 
   /**
-   * Test the method UUID::isValid().
+   * Test the method Uuid::isValid().
    */
   public function testIsValid() {
     $tests = array(
@@ -32,7 +32,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $uuid => $expected) {
-      $this->assertEquals($expected, UUID::isValid($uuid));
+      $this->assertEquals($expected, Uuid::isValid($uuid));
     }
   }
 
@@ -40,14 +40,14 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    * The the v4 random method created a properly formatted UUID.
    */
    public function testV4() {
-     $this->assertTrue(UUID::isValid(UUID::createV4()));
+     $this->assertTrue(Uuid::isValid(Uuid::createV4()));
    }
 
   /**
    * Thest that v4 is random.
    */
   public function testV4IsRandom() {
-    $this->assertNotEquals(UUID::createV4(), UUID::createV4());
+    $this->assertNotEquals(Uuid::createV4(), Uuid::createV4());
   }
 
   /**
@@ -59,28 +59,28 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
       // From https://github.com/shadowhand/uuid/blob/3.1/master/tests/kohana/UUIDTest.php
       'team' => array(
         'expected' => 'db7ec69b-eb29-37ef-a76d-2e2ef553e92e',
-        'namespace' => UUID::NIL,
+        'namespace' => Uuid::NIL,
       ),
 
       // From http://docs.python.org/library/uuid.html
       'python.org' => array(
         'expected' => '6fa459ea-ee8a-3ca4-894e-db77e160355e',
-        'namespace' => UUID::DNS,
+        'namespace' => Uuid::DNS,
       ),
 
       // These were generated using Python.
       'mattfarina.com' => array(
         'expected' => '20438dde-20d8-349c-937e-4544a202f35a',
-        'namespace' => UUID::DNS,
+        'namespace' => Uuid::DNS,
       ),
       'http://mattfarina.com' => array(
         'expected' => '67c6b6cf-7455-30ca-8c6a-1cb02a2ac3df',
-        'namespace' => UUID::URL,
+        'namespace' => Uuid::URL,
       ),
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], UUID::createV3($data['namespace'], $name)->getUUID());
+      $this->assertEquals($data['expected'], Uuid::createV3($data['namespace'], $name)->getUuid());
     }
   }
 
@@ -93,28 +93,28 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
       // From https://github.com/shadowhand/uuid/blob/3.1/master/tests/kohana/UUIDTest.php
       'team' => array(
         'expected' => 'd221f29a-4332-5f0d-b323-c5206a2e86ce',
-        'namespace' => UUID::NIL,
+        'namespace' => Uuid::NIL,
       ),
 
       // From http://docs.python.org/library/uuid.html
       'python.org' => array(
         'expected' => '886313e1-3b8a-5372-9b90-0c9aee199e5d',
-        'namespace' => UUID::DNS,
+        'namespace' => Uuid::DNS,
       ),
 
       // These were generated using Python.
       'mattfarina.com' => array(
         'expected' => '35e872b4-190a-5faa-a0f6-09da0d4f9c01',
-        'namespace' => UUID::DNS,
+        'namespace' => Uuid::DNS,
       ),
       'http://mattfarina.com' => array(
         'expected' => '6b7decb1-f9ad-5821-b676-dc73006cd2d5',
-        'namespace' => UUID::URL,
+        'namespace' => Uuid::URL,
       ),
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], UUID::createV5($data['namespace'], $name)->getUUID());
+      $this->assertEquals($data['expected'], Uuid::createV5($data['namespace'], $name)->getUuid());
     }
   }
 
@@ -122,18 +122,18 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    * Test parsing a UUID as a string when wrapped by {}.
    */
   public function testParseUUID() {
-    $uuid = new UUID('{886313e1-3b8a-5372-9b90-0c9aee199e5d}');
-    $this->assertEquals('886313e1-3b8a-5372-9b90-0c9aee199e5d', $uuid->getUUID());
+    $uuid = new Uuid('{886313e1-3b8a-5372-9b90-0c9aee199e5d}');
+    $this->assertEquals('886313e1-3b8a-5372-9b90-0c9aee199e5d', $uuid->getUuid());
   }
 
   /**
    * Test setting and getting information around a UUID.
    */
   public function testData() {
-    $uuid = new UUID('{35e872b4-190a-5faa-a0f6-09da0d4f9c01}', UUID::V5, UUID::DNS, 'mattfarina.com');
+    $uuid = new Uuid('{35e872b4-190a-5faa-a0f6-09da0d4f9c01}', Uuid::V5, Uuid::DNS, 'mattfarina.com');
 
-    $this->assertEquals(UUID::V5, $uuid->getVersion());
-    $this->assertEquals(UUID::DNS, $uuid->getNamespace());
+    $this->assertEquals(Uuid::V5, $uuid->getVersion());
+    $this->assertEquals(Uuid::DNS, $uuid->getNamespace());
     $this->assertEquals('mattfarina.com', $uuid->getName());
   }
 
@@ -141,9 +141,9 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    * Test URL Support.
    */
   public function testURN() {
-    $uuid = new UUID('urn:uuid:35e872b4-190a-5faa-a0f6-09da0d4f9c01', UUID::V5, UUID::DNS, 'mattfarina.com');
+    $uuid = new Uuid('urn:uuid:35e872b4-190a-5faa-a0f6-09da0d4f9c01', Uuid::V5, Uuid::DNS, 'mattfarina.com');
 
-    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getUUID());
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getUuid());
     $this->assertEquals('urn:uuid:35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getURN());
   }
 
@@ -151,8 +151,8 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    * Test passing in arrays as a URI type.
    */
   public function testArrays() {
-    $uuid = new UUID(array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01'), UUID::V5, UUID::DNS, 'mattfarina.com');
-    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getUUID());
+    $uuid = new Uuid(array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01'), UUID::V5, UUID::DNS, 'mattfarina.com');
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid->getUuid());
 
     $array = array(
        'time_low' => '35e872b4',
@@ -162,8 +162,8 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
        'clock_seq_low' => 'f6',
        'node' => '09da0d4f9c01',
     );
-    $uuid2 = new UUID($array, UUID::V5, UUID::DNS, 'mattfarina.com');
-    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid2->getUUID());
+    $uuid2 = new Uuid($array, Uuid::V5, Uuid::DNS, 'mattfarina.com');
+    $this->assertEquals('35e872b4-190a-5faa-a0f6-09da0d4f9c01', $uuid2->getUuid());
   }
 
   /**
@@ -178,7 +178,7 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
        'clock_seq_low' => 'f6',
        'node' => '09da0d4f9c01',
     );
-    $uuid = new UUID($array, UUID::V5, UUID::DNS, 'mattfarina.com');
+    $uuid = new Uuid($array, Uuid::V5, Uuid::DNS, 'mattfarina.com');
 
     $fields = $uuid->listFields();
     foreach ($fields as $field) {
@@ -190,6 +190,6 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    * Test __toString converting an object to a valid UUID.
    */
   public function testToString() {
-    $this->assertEquals('20438dde-20d8-349c-937e-4544a202f35a', (string)UUID::createV3(UUID::DNS, 'mattfarina.com')->getUUID());
+    $this->assertEquals('20438dde-20d8-349c-937e-4544a202f35a', (string)Uuid::createV3(Uuid::DNS, 'mattfarina.com')->getUuid());
   }
 }

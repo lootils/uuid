@@ -7,7 +7,7 @@
  * Created by Matt Farina on 2011-11-29.
  */
 
-namespace Lootils;
+namespace Lootils\Uuid;
 
 /**
  * This class creates RFC 4122 compliant Universally Unique Identifiers (UUID).
@@ -22,7 +22,7 @@ namespace Lootils;
  * @copyright MIT License
  * @version 1.0
  */
-class UUID {
+class Uuid {
   
   /**
    * @var string DNS namespace from RFC 4122 appendix C.
@@ -199,7 +199,7 @@ class UUID {
    * @return string
    *   A string containing a properly formatted UUID.
    */
-  function getUUID() {
+  function getUuid() {
     return $this->time_low . '-' . $this->time_mid . '-' . $this->time_hi_version . '-' . $this->clock_seq_hi_variant . $this->clock_seq_low . '-' . $this->node;
   }
 
@@ -329,7 +329,7 @@ class UUID {
    * Display the UUID as a string in the format 6ba7b810-9dad-11d1-80b4-00c04fd430c8.
    */
   public function __toString() {
-    return $this->getUUID();
+    return $this->getUuid();
   }
 
   /**
