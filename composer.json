@@ -1,5 +1,5 @@
 {
-  "name": "mattfarina/lootils-uuid",
+  "name": "lootils/uuid",
   "version": "1.0.0-dev",
   "type": "library",
   "description": "A simple class for working with UUIDs.",
@@ -9,7 +9,8 @@
   "authors": [
     {
       "name": "Matt Farina",
-      "email": "matt@mattfarina.com"
+      "email": "matt@mattfarina.com",
+      "homepage": "http://mattfarina.com"
     }
   ],
   "require": {

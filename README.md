@@ -56,7 +56,7 @@ The arguments are in the form:
   * Though an array in the form array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01').
   * With an array where the keys are the field names as seen on the listField method.
 
-* $version: The version if known. Could be UUID::V3, UUID::V4, UUID::V5.
+* $version: The version if known. Could be Uuid::V3, Uuid::V4, Uuid::V5.
 * $namespace: For v3 and v5, the namespace used if it is known..
 * $name: For v3 and v5, the name used if it is known.
 
@@ -66,27 +66,27 @@ The arguments are in the form:
 
 ### Creating a v5 UUID
 
-    $uuid = \Lootils\Uuid\Uuid::createV5(UUID::URL, 'http://example.com/foo.html');
+    $uuid = \Lootils\Uuid\Uuid::createV5(\Lootils\Uuid\Uuid::URL, 'http://example.com/foo.html');
 
 ### Verifying a v5 UUID
 
 If you know the namespace and name for a v5 UUID you can recreate and verify it. UUIDs created with the same namespace and name will always be the same. For example:
 
-    $uuid1 = \Lootils\Uuid\Uuid::createV5(UUID::URL, 'http://example.com/foo.html');
-    $uuid2 = \Lootils\Uuid\Uuid::createV5(UUID::URL, 'http://example.com/foo.html');
+    $uuid1 = \Lootils\Uuid\Uuid::createV5(\Lootils\Uuid\Uuid::URL, 'http://example.com/foo.html');
+    $uuid2 = \Lootils\Uuid\Uuid::createV5(\Lootils\Uuid\Uuid::URL, 'http://example.com/foo.html');
 
 In this case `$uuid1` is equal to `$uuid2`.
 
 ### Creating a v3 UUID
 
-    $uuid = \Lootils\Uuid\Uuid::createV3(UUID::URL, 'http://example.com/foo.html');
+    $uuid = \Lootils\Uuid\Uuid::createV3(\Lootils\Uuid\Uuid::URL, 'http://example.com/foo.html');
 
 ### Verifying a v3 UUID
 
 If you know the namespace and name for a v3 UUID you can recreate and verify it. UUIDs created with the same namespace and name will always be the same. For example:
 
-    $uuid1 = \Lootils\Uuid\Uuid::createV3(UUID::URL, 'http://example.com/foo.html');
-    $uuid2 = \Lootils\Uuid\Uuid::createV3(UUID::URL, 'http://example.com/foo.html');
+    $uuid1 = \Lootils\Uuid\Uuid::createV3(\Lootils\Uuid\Uuid::URL, 'http://example.com/foo.html');
+    $uuid2 = \Lootils\Uuid\Uuid::createV3(\Lootils\Uuid\Uuid::URL, 'http://example.com/foo.html');
 
 In this case the uuid hex string value for `$uuid1` is equal to `$uuid2`.
 
@@ -94,7 +94,7 @@ In this case the uuid hex string value for `$uuid1` is equal to `$uuid2`.
 
 If you want to create a custom namespace (like the URL and DNS ones) for your application you can do so with v3 or v5 methods and a NIL namespace. For example:
 
-    $namespace = \Lootils\Uuid\Uuid::createV5(UUID::NIL, 'my_app_name');
+    $namespace = \Lootils\Uuid\Uuid::createV5(\Lootils\Uuid\Uuid::NIL, 'my_app_name');
 
 
 ## License
