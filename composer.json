@@ -1,6 +1,5 @@
 {
   "name": "lootils/uuid",
-  "version": "1.0.0-beta2",
   "type": "library",
   "description": "A simple class for working with UUIDs.",
   "keywords": ["uuid"],
@@ -18,5 +17,10 @@
   },
   "autoload": {
     "psr-0": { "Lootils\\Uuid": "src/" }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
   }
 }
