@@ -182,7 +182,7 @@ class Uuid {
       $this->version = $version;
     }
     else {
-      throw new Exception('An invalid version was specified.');
+      throw new Exception('An invalid UUID version was specified.');
     }
   }
 
