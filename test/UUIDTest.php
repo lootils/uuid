@@ -40,7 +40,11 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    * The the v4 random method created a properly formatted UUID.
    */
    public function testV4() {
-     $this->assertTrue(Uuid::isValid(Uuid::createV4()));
+
+    $uuid = Uuid::createV4();
+    $this->assertTrue(Uuid::isValid($uuid));
+    print $uuid;
+    $this->assertEquals('4', substr($uuid, 14, 1));
    }
 
   /**
