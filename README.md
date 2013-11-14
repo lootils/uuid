@@ -2,7 +2,7 @@
 
 This PHP library, part of [Lootils](http://github.com/mattfarina/Lootils), creates and verifies RFC 4122 compliant version 3, 4, and 5 UUIDs.
 
-[![Build Status](https://secure.travis-ci.org/mattfarina/Lootils-UUID.png?branch=master)](http://travis-ci.org/mattfarina/Lootils-UUID)
+[![Build Status](https://secure.travis-ci.org/mattfarina/Lootils-UUID.png?branch=master)](http://travis-ci.org/mattfarina/Lootils-UUID) [![Latest Stable Version](https://poser.pugx.org/lootils/uuid/v/stable.png)](https://packagist.org/packages/lootils/uuid) [![Coverage Status](https://coveralls.io/repos/lootils/uuid/badge.png)](https://coveralls.io/r/lootils/uuid)
 
 For more information on UUIDs see
 
