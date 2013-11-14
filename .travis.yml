@@ -10,7 +10,7 @@ before_script:
   - composer install --dev
 
 notifications:
-  irc: "irc.freenode.net#masterminds"
+  irc: "irc.freenode.net#mattfarina"
 
 script:
   - mkdir -p build/logs
