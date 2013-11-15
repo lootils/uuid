@@ -41,10 +41,15 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
    */
    public function testV4() {
 
-    $uuid = Uuid::createV4();
-    $this->assertTrue(Uuid::isValid($uuid));
-    print $uuid;
-    $this->assertEquals('4', substr($uuid, 14, 1));
+    $var = 0;
+    do {
+      ++$var;
+
+      $uuid = Uuid::createV4();
+      $this->assertTrue(Uuid::isValid($uuid));
+      $this->assertEquals('4', substr($uuid, 14, 1));
+      $this->assertTrue(in_array(substr($uuid, 19, 1), array('8', '9', 'a', 'b')));
+    } while ($var < 1000);
    }
 
   /**
@@ -84,7 +89,10 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], Uuid::createV3($data['namespace'], $name)->getUuid());
+      $uuid = Uuid::createV3($data['namespace'], $name)->getUuid();
+      $this->assertEquals($data['expected'], $uuid);
+      $this->assertEquals('3', substr($uuid, 14, 1));
+      $this->assertTrue(in_array(substr($uuid, 19, 1), array('8', '9', 'a', 'b')));
     }
   }
 
@@ -118,7 +126,10 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     );
 
     foreach ($tests as $name => $data) {
-      $this->assertEquals($data['expected'], Uuid::createV5($data['namespace'], $name)->getUuid());
+      $uuid = Uuid::createV5($data['namespace'], $name)->getUuid();
+      $this->assertEquals($data['expected'], $uuid);
+      $this->assertEquals('5', substr($uuid, 14, 1));
+      $this->assertTrue(in_array(substr($uuid, 19, 1), array('8', '9', 'a', 'b')));
     }
   }
 
