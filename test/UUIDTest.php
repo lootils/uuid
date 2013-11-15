@@ -97,6 +97,14 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage The UUID provided for the namespace is not valid.
+   */
+  public function testInvalidNamespaceCreateV3Exception() {
+    $uuid = Uuid::createV3('foo', 'bar');
+  }
+
+  /**
    * Test v5 UUID.
    */
   public function testV5() {
@@ -134,11 +142,27 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage The UUID provided for the namespace is not valid.
+   */
+  public function testInvalidNamespaceCreateV5Exception() {
+    $uuid = Uuid::createV5('foo', 'bar');
+  }
+
+  /**
    * Test parsing a UUID as a string when wrapped by {}.
    */
   public function testParseUUID() {
     $uuid = new Uuid('{886313e1-3b8a-5372-9b90-0c9aee199e5d}');
     $this->assertEquals('886313e1-3b8a-5372-9b90-0c9aee199e5d', $uuid->getUuid());
+  }
+
+  /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage The UUID string supplied could not be parsed.
+   */
+  public function testStringToPartsException() {
+    $uuid = new Uuid('{35e872b4-190a-5faa-a0f6-09da0d4f9c01-453}');
   }
 
   /**
@@ -182,6 +206,57 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
   }
 
   /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage The UUID array supplied could not be parsed.
+   */
+  public function testParseLongArrayException() {
+    $uuid = new Uuid(array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01', 'foo'));
+  }
+
+  /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage The UUID array supplied could not be parsed.
+   */
+  public function testParseArrayStructureException() {
+    $array = array('foo', '35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01');
+    unset($array[0]);
+    $uuid = new Uuid($array);
+  }
+
+  /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage The UUID string supplied could not be parsed.
+   */
+  public function testParseStringException() {
+    $uuid = new Uuid('foo');
+  }
+
+  /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage The UUID supplied could not be parsed.
+   */
+  public function testParseUnknownType() {
+    $test = new StdClass();
+    $uuid = new Uuid($test);
+  }
+
+  /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage An invalid UUID version was specified.
+   */
+  public function testInvalidSetVersionException() {
+    $uuid = new Uuid(array('35e872b4', '190a', '5faa', 'a0', 'f6', '09da0d4f9c01'), 7);
+  }
+
+  /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage The UUID provided for the namespace is not valid.
+   */
+  public function testInvalidUuidBinException() {
+    $uuid = Uuid::bin('foo');
+  }
+
+  /**
    * Make sure fields are properly getting into their place.
    */
   public function testFields() {
@@ -199,6 +274,23 @@ class UUIDTest extends PHPUnit_Framework_TestCase {
     foreach ($fields as $field) {
       $this->assertEquals($array[$field], $uuid->getField($field));
     }
+  }
+
+  /**
+   * @expectedException \Lootils\Uuid\Exception
+   * @expectedExceptionMessage A field value was requested for an invalid field name.
+   */
+  public function testGetFieldException() {
+    $array = array(
+       'time_low' => '35e872b4',
+       'time_mid' => '190a',
+       'time_hi_version' => '5faa',
+       'clock_seq_hi_variant' => 'a0',
+       'clock_seq_low' => 'f6',
+       'node' => '09da0d4f9c01',
+    );
+    $uuid = new Uuid($array, Uuid::V5, Uuid::DNS, 'mattfarina.com');
+    $uuid->getField('foo');
   }
 
   /**
